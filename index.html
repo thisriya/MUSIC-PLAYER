@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <!-- <script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script> -->
+    <script src="https://kit.fontawesome.com/dc868a8cf7.js" crossorigin="anonymous"></script>
+    <title>Music-Player</title>
+</head>
+<body>
+
+
+
+    <div class="container">
+        <div class="music-player">
+        <nav>
+            <div class="circle">
+                <i class="fa-solid fa-angle-left" onclick="start_song()"></i>
+            </div>
+
+            <div class="circle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </nav>
+        <img src="boy_singing.webp" class="song-img" id="song-img">
+        <h1 id="song-title">Hanuman Chalisa🙏🏻</h1>
+        <p id="song-artist">Gulshan Kumar</p>
+        <audio id="song">
+            <source src="song2.mp3" type="audio/mpeg">
+        </audio>
+        <input type="range" value="0" id="progress">
+        
+        <div class="controls">
+            <div onclick="start_song()"><i class="fa-solid fa-rotate-left"></i></div>
+            <div onclick="playPause()"><i class="fa-solid fa-play" id="ctrlIcon"></i></div>
+            <div onclick="next_song()"><i class="fa-solid fa-rotate-right"></i></div>
+        </div>
+  
+      </div>
+    </div>
+
+
+
+    <script>
+
+        let progress = document.getElementById("progress");
+        let song = document.getElementById("song");
+        let ctrlIcon = document.getElementById("ctrlIcon");
+
+        let songs = [
+    {
+        title: "Hanuman Chalisa🙏🏻",
+        artist: "Gulshan Kumar",
+        src: "song1.mp3",
+        img: "boy_singing.webp"
+    },
+    // Add more songs here
+    {
+        title: "Mere Ghar Ram Aye Hai",
+        artist: "Jubin Nautiyal",
+        src: "song2.mp3",
+        img: "jubin.webp"
+    },
+
+    {
+        title: "Ram Siya Ram",
+        artist: "Sachet & Parampara",
+        src: "song3.mp3",
+        img: "sachet.jpg"
+    },
+
+    // {
+    //     title: "Song Title 2",
+    //     artist: "Artist 2",
+    //     src: "song2.mp3",
+    //     img: "boy_singing.webp"
+    // },
+
+    // {
+    //     title: "Song Title 2",
+    //     artist: "Artist 2",
+    //     src: "song2.mp3",
+    //     img: "boy_singing.webp"
+    // },
+
+    // {
+    //     title: "Song Title 2",
+    //     artist: "Artist 2",
+    //     src: "song2.mp3",
+    //     img: "boy_singing.webp"
+    // }
+];
+
+        let currentSongIndex=0;
+        
+        song.onloadedmetadata = function(){
+            progress.max = song.duration;
+            progress.value = song.currentTime;
+        }
+
+        function playPause(){
+            if(ctrlIcon.classList.contains("fa-pause")){
+                song.pause();
+                ctrlIcon.classList.remove("fa-pause");
+                ctrlIcon.classList.add("fa-play");
+            }
+            else{
+                song.play();
+                ctrlIcon.classList.add("fa-pause");
+                ctrlIcon.classList.remove("fa-play");
+            }
+        }
+
+       
+         setInterval(()=>{
+                if(!song.paused) {
+                progress.value=song.currentTime;
+                }
+            },500);
+        
+
+        progress.onchange = function(){
+            song.currentTime=progress.value;
+        }
+
+        function start_song(){
+            currentSongIndex=(currentSongIndex - 1 + songs.length) % songs.length;
+            load_song(currentSongIndex);
+            song.play();
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+        }
+
+        function next_song(){
+            currentSongIndex= (currentSongIndex + 1) % songs.length;
+            load_song(currentSongIndex);
+            song.play();
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+
+        }
+
+        function load_song(index){
+            let songDetails=songs[index];
+            document.getElementById("song-title").innerHTML=songDetails.title;
+            document.getElementById("song-artist").innerHTML=songDetails.artist;
+            document.getElementById("song-img").src=songDetails.img;
+            song.src=songDetails.src;
+            song.load();
+            // song.play();
+            ctrlIcon.classList.add("fa-play");
+            ctrlIcon.classList.remove("fa-pause");
+            console.log("loaded song"+songDetails.title);
+        }
+    
+        load_song(currentSongIndex);
+    </script>
+</body>
+</html>
